@@ -1,0 +1,21 @@
+package io.github.rodrik.demo.football;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import io.github.rodrik.demo.football.client.SeasonService;
+import io.github.rodrik.demo.football.client.retrofit.RetrofitFactory;
+
+@SpringBootApplication
+public class DemoFootbalApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(DemoFootbalApplication.class, args);
+	}
+	
+	@Bean
+	public SeasonService seasonService() {
+		return RetrofitFactory.getSeasonService();
+	}
+}
