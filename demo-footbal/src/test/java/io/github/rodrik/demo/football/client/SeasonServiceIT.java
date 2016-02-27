@@ -10,6 +10,8 @@ import org.junit.Test;
 
 import io.github.rodrik.demo.football.client.retrofit.RetrofitFactory;
 import io.github.rodrik.demo.football.model.Season;
+import io.github.rodrik.demo.football.model.Team;
+import io.github.rodrik.demo.football.model.TeamWrapper;
 import retrofit2.Call;
 
 public class SeasonServiceIT {
@@ -41,6 +43,27 @@ public class SeasonServiceIT {
 			Assertions.assertThat(season.getLeague()).isNotNull();
 			Assertions.assertThat(season.getYear()).isNotNull();
 			System.out.println(season.toString());
+		}
+	}
+	
+	@Test
+	public void testGetTeams() throws IOException {
+		
+		Call<TeamWrapper> callToTeams = sut.getTeams(399L);
+		Assertions.assertThat(callToTeams).isNotNull();
+		
+		TeamWrapper teamWrapper = callToTeams.execute().body();
+		Assertions.assertThat(teamWrapper).isNotNull();
+		
+		Collection<Team> teams = teamWrapper.getTeams();
+		Assertions.assertThat(teams).isNotEmpty();
+		
+		for (Team team : teams) {
+			Assertions.assertThat(team.getCrestUrl()).isNotNull();
+			Assertions.assertThat(team.getName()).isNotNull();
+			Assertions.assertThat(team.getShortName()).isNotNull();
+			Assertions.assertThat(team.getSquadMarketValue()).isNotNull();
+			System.out.println(team.toString());
 		}
 	}
 
