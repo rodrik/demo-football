@@ -19,29 +19,37 @@ public class RetrofitFactory {
 	private static final String SERVICE_URL = "http://api.football-data.org";
 
 	public static SeasonService getSeasonService() {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.registerModule(new JavaTimeModule());
-		//mapper.configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-		//mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
-		
-		HttpLoggingInterceptor logging = new HttpLoggingInterceptor();  
-		logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-		
-		OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-		httpClient.addInterceptor(responseControlHeaders());
-		httpClient.addInterceptor(logging);
-		
 		Retrofit retrofit = new Retrofit.Builder()
-				.client(httpClient.build())
+				.client(httpClient().build())
 			    .baseUrl(SERVICE_URL)
-			    .addConverterFactory(JacksonConverterFactory.create(mapper))
+			    .addConverterFactory(jacksonConverterFactory())
 			    .build();
 
 		SeasonService service = retrofit.create(SeasonService.class);
 		return service;
 	}
+
+	private static OkHttpClient.Builder httpClient() {
+		OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+		httpClient.addInterceptor(headersInterceptor());
+		httpClient.addInterceptor(loggingInterceptor());
+		return httpClient;
+	}
+
+	private static HttpLoggingInterceptor loggingInterceptor() {
+		HttpLoggingInterceptor logging = new HttpLoggingInterceptor();  
+		logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+		return logging;
+	}
+
+	private static JacksonConverterFactory jacksonConverterFactory() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JavaTimeModule());
+		
+		return JacksonConverterFactory.create(mapper);
+	}
 	
-	private static final Interceptor responseControlHeaders() {
+	private static final Interceptor headersInterceptor() {
 		Interceptor requestInterceptor = new Interceptor() {  
 		    @Override
 		    public Response intercept(Interceptor.Chain chain) throws IOException {
