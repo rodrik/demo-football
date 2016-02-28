@@ -2,6 +2,7 @@ package io.github.rodrik.demo.football.client;
 
 import java.util.Collection;
 
+import io.github.rodrik.demo.football.model.FixtureWrapper;
 import io.github.rodrik.demo.football.model.Season;
 import io.github.rodrik.demo.football.model.TeamWrapper;
 import retrofit2.Call;
@@ -15,4 +16,7 @@ public interface SeasonService {
 	
 	@GET("soccerseasons/{id}/teams")
 	Call<TeamWrapper> getTeams(@Path("id") Long id);
+	
+	@GET("soccerseasons/{id}/fixtures")
+	Call<FixtureWrapper> getFixtures(@Path("id") Long id);
 }

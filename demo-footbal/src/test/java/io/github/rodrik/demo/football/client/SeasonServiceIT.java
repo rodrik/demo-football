@@ -9,6 +9,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.github.rodrik.demo.football.client.retrofit.RetrofitFactory;
+import io.github.rodrik.demo.football.model.Fixture;
+import io.github.rodrik.demo.football.model.FixtureWrapper;
 import io.github.rodrik.demo.football.model.Season;
 import io.github.rodrik.demo.football.model.Team;
 import io.github.rodrik.demo.football.model.TeamWrapper;
@@ -60,10 +62,34 @@ public class SeasonServiceIT {
 		
 		for (Team team : teams) {
 			Assertions.assertThat(team.getCrestUrl()).isNotNull();
+			Assertions.assertThat(team.getId()).isNotNull();
 			Assertions.assertThat(team.getName()).isNotNull();
 			Assertions.assertThat(team.getShortName()).isNotNull();
 			Assertions.assertThat(team.getSquadMarketValue()).isNotNull();
 			System.out.println(team.toString());
+		}
+	}
+	
+	@Test
+	public void testGetFixtures() throws IOException {
+		
+		Call<FixtureWrapper> callToFixtures = sut.getFixtures(399L);
+		Assertions.assertThat(callToFixtures).isNotNull();
+		
+		FixtureWrapper fixtureWrapper = callToFixtures.execute().body();
+		Assertions.assertThat(fixtureWrapper).isNotNull();
+		
+		Collection<Fixture> fixtures = fixtureWrapper.getFixtures();
+		Assertions.assertThat(fixtures).isNotEmpty();
+		
+		for (Fixture fixture : fixtures) {
+			Assertions.assertThat(fixture.getId()).isNotNull();
+			Assertions.assertThat(fixture.getMatchday()).isNotNull();
+			Assertions.assertThat(fixture.getStatus()).isNotNull();
+			Assertions.assertThat(fixture.getDate()).isNotNull();
+			Assertions.assertThat(fixture.getAwayTeamId()).isNotNull();
+			Assertions.assertThat(fixture.getHomeTeamId()).isNotNull();
+			System.out.println(fixture.toString());
 		}
 	}
 
