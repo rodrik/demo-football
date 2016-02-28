@@ -1,5 +1,7 @@
 package io.github.rodrik.demo.football.model;
 
+import java.time.ZonedDateTime;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Fixture {
 
 	private Long id;
-    private String date;
+    private ZonedDateTime date;
     private String status;
     private Integer matchday;
     private Long homeTeamId;
@@ -23,10 +25,10 @@ public class Fixture {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getDate() {
+	public ZonedDateTime getDate() {
 		return date;
 	}
-	public void setDate(String date) {
+	public void setDate(ZonedDateTime date) {
 		this.date = date;
 	}
 	public String getStatus() {

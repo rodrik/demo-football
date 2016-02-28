@@ -2,6 +2,9 @@ package io.github.rodrik.demo.football.client.retrofit;
 
 import java.io.IOException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import io.github.rodrik.demo.football.client.SeasonService;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -16,6 +19,11 @@ public class RetrofitFactory {
 	private static final String SERVICE_URL = "http://api.football-data.org";
 
 	public static SeasonService getSeasonService() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JavaTimeModule());
+		//mapper.configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		//mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
+		
 		HttpLoggingInterceptor logging = new HttpLoggingInterceptor();  
 		logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 		
@@ -26,7 +34,7 @@ public class RetrofitFactory {
 		Retrofit retrofit = new Retrofit.Builder()
 				.client(httpClient.build())
 			    .baseUrl(SERVICE_URL)
-			    .addConverterFactory(JacksonConverterFactory.create())
+			    .addConverterFactory(JacksonConverterFactory.create(mapper))
 			    .build();
 
 		SeasonService service = retrofit.create(SeasonService.class);
